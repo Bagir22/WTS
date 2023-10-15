@@ -8,7 +8,7 @@ use yii\db\Migration;
  *
  * - `{{%user}}`
  */
-class m231015_092322_create_accessToken_table extends Migration
+class m231015_093813_create_accessToken_table extends Migration
 {
     /**
      * {@inheritdoc}

@@ -8,7 +8,7 @@ use yii\db\Migration;
  *
  * - `{{%user}}`
  */
-class m231015_092524_create_article_table extends Migration
+class m231015_093245_create_article_table extends Migration
 {
     /**
      * {@inheritdoc}
@@ -16,7 +16,8 @@ class m231015_092524_create_article_table extends Migration
     public function safeUp()
     {
         $this->createTable('{{%article}}', [
-            'userId' => $this->primaryKey(),
+            'id' => $this->primaryKey(),
+            'userId' => $this->integer(),
             'title' => $this->string()->notNull(),
             'body' => $this->text()->notNull (),
         ]);
