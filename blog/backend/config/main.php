@@ -45,7 +45,7 @@ return [
             'showScriptName' => false,
             'rules' => [
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'user'],
-                '<controller:(api)>/<action:(signup|login|publish)>' => '<controller>/<action>',
+                '<controller:(api)>/<action:(signup|login|publish|myarticle)>' => '<controller>/<action>',
             ],
         ],
     ],

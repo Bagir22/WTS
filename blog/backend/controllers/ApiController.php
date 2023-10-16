@@ -83,6 +83,17 @@ class ApiController extends Controller
             $this->makePulish($userId["userId"], $title, $body);
         }
     }   
+
+    public function actionMyarticle() {
+        $params = $this->request->get();
+        if (count($params) == 0) {
+            return Yii::$app->response->content = json_encode("No accessToken");
+        }
+        $accessToken = $params["accessToken"];
+        $userId = $this->getUserByAccessToken($accessToken);
+        $articles = $this->getUserArticleList($userId["userId"]);
+        Yii::$app->response->content = json_encode($articles);
+    }   
     private function getAccessToken($id) {
         $accessToken = (new \yii\db\Query())
             ->select('accessToken')
@@ -98,8 +109,8 @@ class ApiController extends Controller
             ->select('userId')
             ->from('accessToken')
             ->where(['accessToken' => $token])
-            ->one(); 
-   
+            ->one();
+        
         return $userId;
     }
 
@@ -111,6 +122,16 @@ class ApiController extends Controller
                 ':title' => $title,
                 ':body' => $body
             ])->execute();
+    }
+
+    private function getUserArticleList($id) {
+        $articles = (new \yii\db\Query())
+            ->select(['title', 'body'])
+            ->from('article')
+            ->where(['userId' => $id])
+            ->all(); 
+
+        return $articles;
     }
     private function generateRandomString($length = 30) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
