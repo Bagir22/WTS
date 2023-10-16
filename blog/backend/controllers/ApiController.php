@@ -84,6 +84,26 @@ class ApiController extends Controller
         }
     }   
 
+    public function actionAllarticle() {
+        $params = $this->request->get();
+        $limit = $params["limit"] ?? "";
+        $offset = $params["offset"]?? "";
+
+        $articles = (new \yii\db\Query())
+            ->select(['title', 'body'])
+            ->from('article')
+            ->limit($limit)
+            ->offset($offset)->all();
+        /*if ($limit != "") {
+            $articles->limit($limit);
+        }
+        if ($offset != "") {
+            $articles;
+        } 
+        $articles->all();*/
+        Yii::$app->response->content = json_encode($articles);
+    }   
+
     public function actionMyarticle() {
         $params = $this->request->get();
         if (count($params) == 0) {
