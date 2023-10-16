@@ -4,7 +4,8 @@ namespace backend\controllers;
 
 use yii;
 use yii\rest\Controller;
-use app\models\User;
+use common\models\User;
+use yii\base\Model;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -19,7 +20,8 @@ class ApiController extends Controller
             $model = new User();
             $model->username = $params["username"];
             $model->email = $params["email"];
-            $model->password_hash = Yii::$app->security->generatePasswordHash($params["password"]);
+            $model->setPassword($params["password"]);
+            $model->generateAuthKey();
             $db = Yii::$app->db;
             $validate = $db->createCommand('SELECT * FROM `user` where username = :username or email = :email', [
                 ':username' => $model->username,
@@ -34,7 +36,7 @@ class ApiController extends Controller
                     ':created_at' => time(),
                     ':updated_at' => time(),
                     ':status' => 9,
-                    ':auth_key' => $this->generateRandomString(30),
+                    ':auth_key' => $model->auth_key,
                 ])->execute();
                 if ($success == 1) {
                     $accessToken = $this->generateRandomString(30);
@@ -47,15 +49,38 @@ class ApiController extends Controller
                     Yii::$app->response->content = json_encode(sprintf('accessToken: %s', $accessToken));
                     }
                 } else {
-                    Yii::$app->response->content = "Can't register user";
+                    Yii::$app->response->content = json_encode("Can't register user");
                 }           
             } else {
-                Yii::$app->response->content = "User already exist";
+                Yii::$app->response->content = json_encode("User already exist");
             }
         }
     }
 
-    function generateRandomString($length = 30) {
+    public function actionLogin() {
+        if ($this->request->isPost) {
+            $params = $this->request->post();
+            $user = User::findByEmail($params["email"]);
+            if ($user->validatePassword($params["password"])) {
+                $token = $this->getAccessToken($user->id);
+                Yii::$app->response->content = json_encode($token);
+            } else {
+                Yii::$app->response->content = json_encode("Can't validate user");
+            }
+        }
+    }   
+
+    private function getAccessToken($id) {
+        $accessToken = (new \yii\db\Query())
+            ->select('accessToken')
+            ->from('accessToken')
+            ->where(['userId' => $id])
+            ->one(); 
+
+        return $accessToken;
+    }
+
+    private function generateRandomString($length = 30) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';
