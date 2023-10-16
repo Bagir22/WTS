@@ -70,6 +70,19 @@ class ApiController extends Controller
         }
     }   
 
+    public function actionPublish() {
+        if ($this->request->isPost) {
+            $params = $this->request->post();
+            $accessToken = $params["accessToken"];
+            $title = $params["title"];
+            $body = $params["body"];
+            
+            $userId = $this->getUserByAccessToken($accessToken);
+            //echo $title;
+            //echo $body;
+            $this->makePulish($userId["userId"], $title, $body);
+        }
+    }   
     private function getAccessToken($id) {
         $accessToken = (new \yii\db\Query())
             ->select('accessToken')
@@ -80,6 +93,25 @@ class ApiController extends Controller
         return $accessToken;
     }
 
+    private function getUserByAccessToken($token) {
+        $userId = (new \yii\db\Query())
+            ->select('userId')
+            ->from('accessToken')
+            ->where(['accessToken' => $token])
+            ->one(); 
+   
+        return $userId;
+    }
+
+    private function makePulish($userId, $title, $body) {
+        $db = Yii::$app->db;
+        $query = $db->createCommand('INSERT INTO `article` (`userId`, `title`, `body`) VALUES 
+                (:userId, :title, :body)', [
+                ':userId' => $userId,
+                ':title' => $title,
+                ':body' => $body
+            ])->execute();
+    }
     private function generateRandomString($length = 30) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
