@@ -78,8 +78,6 @@ class ApiController extends Controller
             $body = $params["body"];
             
             $userId = $this->getUserByAccessToken($accessToken);
-            //echo $title;
-            //echo $body;
             $this->makePulish($userId["userId"], $title, $body);
         }
     }   
@@ -87,31 +85,28 @@ class ApiController extends Controller
     public function actionAllarticle() {
         $params = $this->request->get();
         $limit = $params["limit"] ?? "";
-        $offset = $params["offset"]?? "";
+        $offset = $params["offset"] ?? "";
 
         $articles = (new \yii\db\Query())
             ->select(['title', 'body'])
             ->from('article')
             ->limit($limit)
             ->offset($offset)->all();
-        /*if ($limit != "") {
-            $articles->limit($limit);
-        }
-        if ($offset != "") {
-            $articles;
-        } 
-        $articles->all();*/
+
         Yii::$app->response->content = json_encode($articles);
     }   
 
     public function actionMyarticle() {
         $params = $this->request->get();
-        if (count($params) == 0) {
-            return Yii::$app->response->content = json_encode("No accessToken");
+        $accessToken = $params["accessToken"] ?? "";
+        if ($accessToken == "") {
+            return Yii::$app->response->content = json_encode("No access token");
         }
-        $accessToken = $params["accessToken"];
         $userId = $this->getUserByAccessToken($accessToken);
-        $articles = $this->getUserArticleList($userId["userId"]);
+        $limit = $params["limit"] ?? "";
+        $offset = $params["offset"]?? "";
+        $articles = $this->getUserArticleList($userId["userId"], $limit, $offset);
+        
         Yii::$app->response->content = json_encode($articles);
     }   
     private function getAccessToken($id) {
@@ -144,12 +139,13 @@ class ApiController extends Controller
             ])->execute();
     }
 
-    private function getUserArticleList($id) {
+    private function getUserArticleList($id, $limit, $offset) {
         $articles = (new \yii\db\Query())
             ->select(['title', 'body'])
             ->from('article')
             ->where(['userId' => $id])
-            ->all(); 
+            ->limit($limit)
+            ->offset($offset)->all(); 
 
         return $articles;
     }
