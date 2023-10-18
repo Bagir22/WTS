@@ -1,15 +1,11 @@
 <?php
 
-namespace backend\controllers;
+namespace frontend\controllers;
 
 use yii;
 use yii\rest\Controller;
 use common\models\User;
-use yii\base\Model;
 
-/**
- * UserController implements the CRUD actions for User model.
- */
 class ApiController extends Controller
 {
     public function actionSignup()
