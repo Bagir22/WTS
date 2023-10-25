@@ -2,17 +2,16 @@
 
 namespace backend\controllers;
 
-use app\models\User;
+use app\models\Article;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
 
 /**
- * UserController implements the CRUD actions for User model.
+ * ArticleController implements the CRUD actions for Article model.
  */
-class UserController extends Controller
+class ArticleController extends Controller
 {
     /**
      * @inheritDoc
@@ -28,34 +27,19 @@ class UserController extends Controller
                         'delete' => ['POST'],
                     ],
                 ],
-                'access' => [
-                    'class' => AccessControl::className(),
-                    'rules' => [
-                    //тут правила для доступа, каждое в своём массиве
-                        [
-                            //разрешить доступ
-                            'allow' => true,
-                            //к методам(указывать название какое будет у метода в адресной стороке)
-                            //если упустить свойство actions правило будет применяться ко всем методам
-                            'actions' => ['index', 'view', 'create', 'update', 'delete'],
-                            //тут через запятую ['роль1','роль2', 'роль3'] можно указывать для кого активно правило
-                            //'roles' => ['isAdmin'],
-                        ],
-                    ],
-                ],
             ]
         );
     }
 
     /**
-     * Lists all User models.
+     * Lists all Article models.
      *
      * @return string
      */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => User::find(),
+            'query' => Article::find(),
             /*
             'pagination' => [
                 'pageSize' => 50
@@ -74,7 +58,7 @@ class UserController extends Controller
     }
 
     /**
-     * Displays a single User model.
+     * Displays a single Article model.
      * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -87,13 +71,13 @@ class UserController extends Controller
     }
 
     /**
-     * Creates a new User model.
+     * Creates a new Article model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new User();
+        $model = new Article();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -109,7 +93,7 @@ class UserController extends Controller
     }
 
     /**
-     * Updates an existing User model.
+     * Updates an existing Article model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
      * @return string|\yii\web\Response
@@ -129,7 +113,7 @@ class UserController extends Controller
     }
 
     /**
-     * Deletes an existing User model.
+     * Deletes an existing Article model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return \yii\web\Response
@@ -143,15 +127,15 @@ class UserController extends Controller
     }
 
     /**
-     * Finds the User model based on its primary key value.
+     * Finds the Article model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return User the loaded model
+     * @return Article the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = User::findOne(['id' => $id])) !== null) {
+        if (($model = Article::findOne(['id' => $id])) !== null) {
             return $model;
         }
 
