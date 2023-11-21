@@ -99,18 +99,6 @@ class User extends BaseUser
         return static::findOne(['email' => $email, 'status' => self::STATUS_ACTIVE]);
     }
 
-    
-    /*
-    public function getAccessToken($id) {
-        $accessToken = (new \yii\db\Query())
-            ->select('accessToken')
-            ->from('accessToken')
-            ->where(['userId' => $id])
-            ->one(); 
-
-        return $accessToken;
-    }
-    */    
 
     /**
      * Save user accessToken
@@ -133,13 +121,8 @@ class User extends BaseUser
      * @return User|null
      */
     public static function getUserByAccessToken($token) {
-        $userId = (new \yii\db\Query())
-            ->select('userId')
-            ->from('accessToken')
-            ->where(['token' => $token])
-            ->one();
-        
-            return static::findOne(['id' => $userId, 'status' => self::STATUS_ACTIVE]);
+        $userIdByToken = AccessToken::findOne(['token' => $token]);
+        return User::findOne(['id' => $userIdByToken->userId]);
     }
 
     /**
@@ -149,12 +132,7 @@ class User extends BaseUser
      * @return string|null
      */
     public function getAccessTokenByUserID($id) {
-        $userId = (new \yii\db\Query())
-            ->select('token')
-            ->from('accessToken')
-            ->where(['userId' => $id])
-            ->one();
-        
-        return $userId;
+        $accessToken = AccessToken::findOne(['userId' => $id]);
+        return $accessToken->token;
     }
 }

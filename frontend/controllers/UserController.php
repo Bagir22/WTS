@@ -8,10 +8,16 @@ use yii;
 use yii\rest\Controller;
 use common\models\User;
 use yii\helpers\Json;
+use yii\web\Response;
 
 class UserController extends Controller
 {
-    // TODO Разнести методы по UserController и ArticleController
+    public function beforeAction($action)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return parent::beforeAction($action);
+    }
+    
     public function actionSignup()
     {
         if ($this->request->isPost) {
@@ -22,24 +28,24 @@ class UserController extends Controller
             $password = $params["password"] ?? "";
 
             if ($username== "") {
-                return Yii::$app->response->content = json_encode([
+                return [
                     "message" => "Unsuccessful signup",
                     "error" => "No username"
-                ]);
+                ];
             }
 
             if ($email  == "") {
-                return Yii::$app->response->content = json_encode([
+                return [
                     "message" => "Unsuccessful signup",
                     "error" => "No user email"
-                ]);
+                ];
             }
 
             if ($password  == "") {
-                return Yii::$app->response->content = json_encode([
+                return [
                     "message" => "Unsuccessful signup",
                     "error" => "No user password"
-                ]);
+                ];
             }
 
             $model = new User();
@@ -50,29 +56,27 @@ class UserController extends Controller
             $model->created_at = time();
             $model->updated_at = time();
 
-            // TODO $model->save(); https://www.yiiframework.com/doc/guide/2.0/ru/db-active-record
             
             if ($model->save()) {
-                //create and save token
                 $accessToken = new AccessToken();
                 $accessToken->userId = $model->id;
                 $accessToken->token = Yii::$app->security->generateRandomString();
                 if ($model->save()) {
                     $accessToken->save();
-                    return Json::encode([
+                    return [
                         'accessToken' => $accessToken->token,
-                    ]);
+                    ];
                 } else {
-                    return Json::encode([
+                    return [
                         "message" => "Can't create accessToken for user",
                         "error" => $accessToken->getErrors(),
-                    ]);
+                    ];
                 }                
             } else {
-                return Json::encode([
+                return [
                     "message" => "Can't create user",
                     "error" => $model->getErrors(),
-                ]);
+                ];
             }
         }
     }
@@ -82,12 +86,11 @@ class UserController extends Controller
             $params = $this->request->post();
             $user = User::findByEmail($params["email"]);
             if ($user->validatePassword($params["password"])) {
-                $token = $user->getAccessTokenByUserID($user->id);
-                Yii::$app->response->content = json_encode($token);
+                return $user->getAccessTokenByUserID($user->id);
             } else {
-                Yii::$app->response->content = json_encode([
+                return [
                     "message" => "Can't validate user"
-                ]);
+                ];
             }
         }
     }   

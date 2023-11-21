@@ -15,11 +15,27 @@ namespace common\models;
  */
 class Article extends BaseArticle
 { 
-    public function makePublish($userId, $title, $body) {
-        $article = new Article();
+    public function makePublish()
+    {
+        /*
         $article->userId = $userId;
         $article->title = $title;
         $article->body = $body;
-        return $article->save();
+
+        return $model->save();
+        */
+
+        //var_dump($this->getAttributes()['title']);
+
+        if ($this->save()) {
+            return [
+                "message" => "Successful publish"
+            ];
+        } else {
+            return [
+                "message" => "Unsuccessful publish",
+                "error" => $this->getErrors()
+            ];
+        }
     }
 }
