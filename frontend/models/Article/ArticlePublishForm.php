@@ -3,33 +3,52 @@
 namespace frontend\models\Article;
 
 use common\models\User;
+use yii\base\Model;
 use Exception;
 use common\models\Article;
 use Yii;
-class ArticlePublishForm extends Article
+class ArticlePublishForm extends Model
 {
-    public $userId;
+    public $accessToken;
     public $title;
     public $body;
 
     public function rules()
     {
         return [
-            [['userId', 'title', 'body'], 'required'],
+            [['accessToken', 'title'], 'required'],
+            [['body'], 'default', 'value' => null],
         ];
     }
 
     public function init() {
         $this->attributes = Yii::$app->request->post();
+    }
 
-        $accessToken = Yii::$app->request->post()['token'] ?? "";
-
-        if (!$accessToken) {
+    public function makePublish() {
+        if (!$this->accessToken) {
             throw new Exception("No access token");
         }
 
-        $user = User::getUserByAccessToken($accessToken);
+        $user = User::getUserByAccessToken($this->accessToken);
 
-        $this->userId = $user->id ?? -1;
+        if (!$user) {
+            throw new Exception("No find user");
+        } else {
+            $article = new Article();
+            $article->userId = $user->id;
+            $article->title = $this->title;
+            $article->body = $this->body;
+            if ($article->save()) {
+                return [
+                    "message" => "Successful publish"
+                ];
+            } else {
+                return [
+                    "message" => "Unsuccessful publish",
+                    "error" => $this->getErrors()
+                ];
+            }
+        }
     }
 }
