@@ -23,17 +23,20 @@ class ArticleController extends Controller
 
         if ($model->validate()) {
             return $model->makePublish();
+        } else {
+            return $model->getErrors();
         }
     }
 
-
     public function actionAll() {
         $model = new ArticleListForm();
-        return $model->getArticleList();
+        $model->articles = $model->getArticleList();
+        return $model->serialize();
     }   
 
     public function actionMy() {
         $model = new ArticleListForm();
-        return $model->getArticleList();
+        $model->articles = $model->getArticleList();
+        return $model->serialize();
     }  
 }

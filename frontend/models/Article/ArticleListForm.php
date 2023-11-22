@@ -13,6 +13,7 @@ class ArticleListForm extends Model
     public $limit;
     public $offset;
 
+    public $articles;
     public function rules()
     {
         return [];
@@ -39,5 +40,33 @@ class ArticleListForm extends Model
                 ->offset($this->offset)
                 ->asArray()->all();
         }
+    }
+
+    public function serialize() {
+        $result = [];
+
+        foreach ($this->articles as $article) {
+            array_push( $result, $this->shortSerialize($article));
+        }
+
+        return $result;
+    }
+
+    public function shortSerialize($article) {
+
+        return [
+            "id" => $article["id"],
+            "title" => $article["title"],
+        ];
+    }
+
+    public function longSerialize($article) {
+        return [
+            "id" => $article["id"],
+            "userId" => $article["userId"],
+            "title" => $article["title"],
+            "body" => $article["body"],
+            //comments
+        ];
     }
 }
