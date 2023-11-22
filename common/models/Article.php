@@ -12,6 +12,7 @@ namespace common\models;
  * @property int $userId
  *
  * @property User $user
+ * @property Comments[] $comments
  */
 class Article extends BaseArticle
 { 
