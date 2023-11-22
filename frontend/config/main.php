@@ -45,6 +45,7 @@ return [
             'rules' => [
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'user'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'article'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'comments'],
             ],
         ],
     ],

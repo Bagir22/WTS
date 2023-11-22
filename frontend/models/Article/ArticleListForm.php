@@ -2,6 +2,7 @@
 
 namespace frontend\models\Article;
 
+use common\models\Comments;
 use common\models\User;
 use yii\base\Model;
 use common\models\Article;
@@ -66,7 +67,7 @@ class ArticleListForm extends Model
             "userId" => $article["userId"],
             "title" => $article["title"],
             "body" => $article["body"],
-            //comments
+            "comments" => Comments::findAll(['articleId' => $article["id"]])
         ];
     }
 }

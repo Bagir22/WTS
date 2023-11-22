@@ -15,6 +15,14 @@ namespace common\models;
  * @property Comments[] $comments
  */
 class Article extends BaseArticle
-{ 
-
+{
+    /**
+     * Gets query for [[Comments]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getComments()
+    {
+        return $this->hasMany(Comments::class, ['articleId' => 'id']);
+    }
 }
