@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use common\models\AccessToken;
 
 /**
  * This is the model class for table "user".
@@ -99,19 +100,41 @@ class User extends BaseUser
         return static::findOne(['email' => $email, 'status' => self::STATUS_ACTIVE]);
     }
 
-
     /**
      * Save user accessToken
      *
      * @param string $id
-     * @return string|null
+     * @return string|array
      */
-    public function saveUserAccessToken($id) {
-        $accessToken = new AccessToken(['user_id'=> $id]);
+    private function saveUserAccessToken($id) {
+        $accessToken = new AccessToken(['userId'=> $id]);
         $accessToken->token = Yii::$app->security->generateRandomString();
-        $accessToken->save();
+        if ($accessToken->save()) {
+            return [
+                "accessToken" => $accessToken->token
+                ];
+        } else {
+            return [
+                "message" => "Can't save access token",
+                "error" => $this->getErrors(),
+            ];
+        }
+    }
 
-        return $accessToken->token;
+    /**
+     * Save user
+     *
+     * @return string|array
+     */
+    public function saveUser() {
+        if ($this->save()) {
+            return $this->saveUserAccessToken($this->id);
+        } else {
+            return [
+                "message" => "Can't create user",
+                "error" => $this->getErrors(),
+            ];
+        }
     }
 
     /**

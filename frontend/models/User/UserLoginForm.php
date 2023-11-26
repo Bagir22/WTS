@@ -2,11 +2,10 @@
 
 namespace frontend\models\User;
 
-use common\models\AccessToken;
-use common\models\User;
 use yii\base\Model;
-use common\models\Article;
-use Yii;
+use yii;
+
+use common\models\User;
 
 class UserLoginForm extends Model
 {
@@ -16,18 +15,26 @@ class UserLoginForm extends Model
     public function rules()
     {
         return [
-            [['password'], 'required'],
+            [['email', 'password'], 'required'],
+
             [['email'], 'email'],
+            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
+            ['email', 'string', 'min' => 2, 'max' => 255],
+
+            ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
         ];
     }
 
-    public function init() {
+    public function init()
+    {
         $this->attributes = Yii::$app->request->post();
     }
 
-    public function login() {
+    public function login()
+    {
         $user = User::findByEmail($this->email);
-        if ($user->validatePassword($this->password)) {
+        if ($user->validatePassword($this->password))
+        {
             return ["accessToken" => $user->getAccessTokenByUserID($user->id)];
         } else {
             return [

@@ -2,12 +2,12 @@
 
 namespace frontend\models\Comments;
 
+use yii\base\Model;
+use yii;
+
 use common\models\Comments;
 use common\models\User;
-use yii\base\Model;
-use Exception;
-use common\models\Article;
-use Yii;
+
 class CommentsDeleteForm extends Model
 {
     public $accessToken;
@@ -17,6 +17,14 @@ class CommentsDeleteForm extends Model
     {
         return [
             [['accessToken', 'commentId'], 'required'],
+
+            ['accessToken', 'exist', 'targetClass' => '\common\models\AccessToken',
+                'targetAttribute' => 'token',
+                'message' => "This access token doesn't exist."],
+
+            ['commentId', 'exist', 'targetClass' => '\common\models\Comments',
+                'targetAttribute' => 'id',
+                'message' => "This comment doesn't exist."],
         ];
     }
 
@@ -25,26 +33,27 @@ class CommentsDeleteForm extends Model
     }
 
     public function deleteComment() {
-        if (!$this->accessToken) {
-            throw new Exception("No access token");
+        if (!$this->validate()) {
+            return $this->getErrors();
         }
 
         $user = User::getUserByAccessToken($this->accessToken);
 
         if (!$user) {
-            throw new Exception("No find user");
+            return [
+                "message" => "Unsuccessful delete comment",
+                "error" => "No find user by access token"
+            ];
         } else {
-            $comments = Comments::findOne(['id' => $this->commentId]);
-            if ($comments && $comments->delete()) {
-                return [
-                    "message" => "Successful delete comment"
-                ];
-            } else {
-                return [
-                    "message" => "Unsuccessful delete comment",
-                    "error" => $this->getErrors()
-                ];
+            $comment = Comments::findOne(['id' => $this->commentId]);
+            if ($comment) {
+                return $comment->deleteComment();
             }
         }
+
+        return [
+            "message" => "Unsuccessful delete comment",
+            "error" => "No find comment to delete"
+        ];
     }
 }

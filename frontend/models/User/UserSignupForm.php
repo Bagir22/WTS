@@ -2,11 +2,10 @@
 
 namespace frontend\models\User;
 
-use common\models\AccessToken;
-use common\models\User;
 use yii\base\Model;
-use common\models\Article;
-use Yii;
+use yii;
+
+use common\models\User;
 
 class UserSignupForm extends Model
 {
@@ -17,47 +16,40 @@ class UserSignupForm extends Model
     public function rules()
     {
         return [
-            [['username','password'], 'required'],
+            [['username','password', 'email'], 'required'],
+
+            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
+            ['username', 'string', 'min' => 2, 'max' => 255],
+
             [['email'], 'email'],
+            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
+            ['email', 'string', 'min' => 2, 'max' => 255],
+
+            ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
         ];
     }
 
-    public function init() {
+    public function init()
+    {
         $this->attributes = Yii::$app->request->post();
     }
 
-    public function signup() {
-        $model = new User();
-        $model->username = $this->username;
-        $model->email = $this->email;
-        $model->setPassword($this->password);
-        $model->generateAuthKey();
-        $model->generateEmailVerificationToken();
-        $model->created_at = time();
-        $model->updated_at = time();
-
-        if ($model->save()) {
-            $accessToken = new AccessToken();
-            $accessToken->userId = $model->id;
-            $accessToken->token = Yii::$app->security->generateRandomString();
-
-            if ($accessToken->save()) {
-                return [
-                    'accessToken' => $accessToken->token,
-                ];
-            } else {
-                return [
-                    "message" => "Can't create accessToken for user",
-                    "error" => $accessToken->getErrors(),
-                ];
-            }
-        } else {
-            return [
-                "message" => "Can't create user",
-                "error" => $this->getErrors(),
-            ];
+    public function signup()
+    {
+        if (!$this->validate())
+        {
+            return $this->getErrors();
         }
 
-    }
+        $user = new User();
+        $user->username = $this->username;
+        $user->email = $this->email;
+        $user->setPassword($this->password);
+        $user->generateAuthKey();
+        $user->generateEmailVerificationToken();
+        $user->created_at = time();
+        $user->updated_at = time();
 
+        return $user->saveUser();
+    }
 }

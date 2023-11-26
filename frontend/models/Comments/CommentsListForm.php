@@ -2,60 +2,82 @@
 
 namespace frontend\models\Comments;
 
+use yii\base\Model;
+use yii;
+
 use common\models\Comments;
 use common\models\User;
-use yii\base\Model;
-use common\models\Article;
-use Yii;
 
 class CommentsListForm extends Model
 {
     public $accessToken;
     public $articleId;
 
+    public $limit;
+    public $offset;
+
     public $comments;
     public function rules()
     {
-        return [];
+        return [
+            [['articleId'], 'required'],
+
+            ['accessToken', 'exist', 'targetClass' => '\common\models\AccessToken',
+                'targetAttribute' => 'token',
+                'message' => "This access token doesn't exist."],
+
+            ['articleId', 'exist', 'targetClass' => '\common\models\Article',
+                'targetAttribute' => 'id',
+                'message' => "This article doesn't exist."],
+
+            ['limit', 'default', 'value' => Yii::$app->params['comment.limit']],
+
+            ['offset', 'default', 'value'  => Yii::$app->params['comment.offset']],
+        ];
     }
 
-    public function init() {
-        $this->accessToken = Yii::$app->request->get()['token'] ?? "";
-        $this->articleId = Yii::$app->request->get()['articleId'] ?? "";
+    public function init()
+    {
+        $this->attributes = Yii::$app->request->get();
     }
 
-    public function getCommentsList() {
-        if ($this->accessToken) {
+    public function getCommentsList()
+    {
+        if (!$this->validate()) {
+            return $this->getErrors();
+        }
+
+        if ($this->accessToken)
+        {
             $user = User::getUserByAccessToken($this->accessToken);
-            return Comments::findAll(['articleId' => $this->articleId, 'userId' => $user->id]);
-        } else {
-            return Comments::findAll(['articleId' => $this->articleId]);
+            $this->comments = Comments::find()
+                ->where(['articleId' => $this->articleId, 'userId' => $user->id])
+                ->limit($this->limit)
+                ->offset($this->offset)->all();
+
+            return $this->serialize();
+        }
+        else
+        {
+            $this->comments = Comments::find()
+                ->where(['articleId' => $this->articleId])
+                ->limit($this->limit)
+                ->offset($this->offset)->all();
+
+            return $this->serialize();
         }
     }
 
-    public function serialize() {
+    public function serialize()
+    {
         $result = [];
 
-        foreach ($this->comments as $comment) {
-            array_push( $result, $this->shortSerialize($comment));
+        foreach ($this->comments as $comment)
+        {
+            $model = new Comments($comment);
+            $result[] = $model->shortSerialize();
         }
 
         return $result;
-    }
-    public function shortSerialize($comment) {
-
-        return [
-            "userId" => $comment["userId"],
-            "body" => $comment["body"],
-        ];
-    }
-
-    public function longSerialize($comment) {
-        return [
-            "commentId" => $comment["id"],
-            "userId" => $comment["userId"],
-            "articleId" => $comment["articleId"],
-            "body" => $comment["body"],
-        ];
     }
 }

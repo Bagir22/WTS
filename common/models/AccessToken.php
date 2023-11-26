@@ -13,6 +13,6 @@ use Yii;
  * @property User $user
  */
 class AccessToken extends BaseAccessToken
-{ 
+{
 
 }

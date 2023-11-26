@@ -2,15 +2,32 @@
 
 namespace frontend\controllers;
 
-use frontend\models\Comments\CommentsDeleteForm;
-use frontend\models\Comments\CommentsPublishForm;
-use frontend\models\Comments\CommentsListForm;
-use yii\web\Response;
-use yii\rest\Controller;
 use yii;
+use yii\filters\VerbFilter;
+use yii\rest\Controller;
+use yii\web\Response;
+
+use frontend\models\Comments\CommentsDeleteForm;
+use frontend\models\Comments\CommentsListForm;
+use frontend\models\Comments\CommentsPublishForm;
 
 class CommentsController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'publish' => ['post'],
+                    'delete' => ['post'],
+                    'all' => ['get'],
+                    'my' => ['get'],
+                ],
+            ],
+        ];
+    }
+
     public function beforeAction($action)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -20,34 +37,25 @@ class CommentsController extends Controller
     public function actionPublish()
     {
         $model = new CommentsPublishForm();
-
-        if ($model->validate()) {
-            return $model->makePublish();
-        } else {
-            return $model->getErrors();
-        }
+        return $model->makePublish();
     }
 
     public function actionDelete()
     {
         $model = new CommentsDeleteForm();
+        return $model->deleteComment();
 
-        if ($model->validate()) {
-            return $model->deleteComment();
-        } else {
-            return $model->getErrors();
-        }
     }
 
-    public function actionAll() {
+    public function actionAll()
+    {
         $model = new CommentsListForm();
-        $model->comments = $model->getCommentsList();
-        return $model->serialize();
+        return $model->getCommentsList();
     }
 
-    public function actionMy() {
+    public function actionMy()
+    {
         $model = new CommentsListForm();
-        $model->articles = $model->getCommentsList();
-        return $model->serialize();
+        return $model->getCommentsList();
     }
 }
