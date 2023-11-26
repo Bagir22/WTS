@@ -2,11 +2,11 @@
 
 namespace backend\controllers;
 
-use common\models\Comments;
+use common\models\Comments\Comments;
 use yii\data\ActiveDataProvider;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * CommentsController implements the CRUD actions for Comments model.

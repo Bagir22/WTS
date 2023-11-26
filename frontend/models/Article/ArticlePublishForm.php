@@ -2,11 +2,10 @@
 
 namespace frontend\models\Article;
 
+use common\models\Article\Article;
+use common\models\User\User;
 use yii;
 use yii\base\Model;
-
-use common\models\User;
-use common\models\Article;
 
 class ArticlePublishForm extends Model
 {
@@ -19,7 +18,7 @@ class ArticlePublishForm extends Model
         return [
             [['accessToken', 'title'], 'required'],
 
-            ['accessToken', 'exist', 'targetClass' => '\common\models\AccessToken',
+            ['accessToken', 'exist', 'targetClass' => '\common\models\AccessToken\AccessToken',
                 'targetAttribute' => 'token',
                 'message' => "This access token doesn't exist."],
 

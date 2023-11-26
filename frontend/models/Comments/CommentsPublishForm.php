@@ -2,11 +2,10 @@
 
 namespace frontend\models\Comments;
 
-use yii\base\Model;
+use common\models\Comments\Comments;
+use common\models\User\User;
 use yii;
-
-use common\models\Comments;
-use common\models\User;
+use yii\base\Model;
 
 class CommentsPublishForm extends Model
 {
@@ -19,11 +18,11 @@ class CommentsPublishForm extends Model
         return [
             [['accessToken', 'articleId', 'body'], 'required'],
 
-            ['accessToken', 'exist', 'targetClass' => '\common\models\AccessToken',
+            ['accessToken', 'exist', 'targetClass' => '\common\models\AccessToken\AccessToken',
                 'targetAttribute' => 'token',
                 'message' => "This access token doesn't exist."],
 
-            ['articleId', 'exist', 'targetClass' => '\common\models\Article',
+            ['articleId', 'exist', 'targetClass' => '\common\models\Article\Article',
                 'targetAttribute' => 'id',
                 'message' => "This article doesn't exist."],
         ];

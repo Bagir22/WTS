@@ -19,7 +19,7 @@ return [
             ]
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'common\models\User\User',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],

@@ -2,10 +2,9 @@
 
 namespace frontend\models\User;
 
-use yii\base\Model;
+use common\models\User\User;
 use yii;
-
-use common\models\User;
+use yii\base\Model;
 
 class UserLoginForm extends Model
 {
@@ -18,7 +17,7 @@ class UserLoginForm extends Model
             [['email', 'password'], 'required'],
 
             [['email'], 'email'],
-            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
+            ['email', 'unique', 'targetClass' => '\common\models\User\User', 'message' => 'This email address has already been taken.'],
             ['email', 'string', 'min' => 2, 'max' => 255],
 
             ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],

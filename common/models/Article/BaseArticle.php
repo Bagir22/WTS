@@ -1,26 +1,28 @@
 <?php
 
-namespace common\models;
+namespace common\models\Article;
 
-use Yii;
+use common\models\User\User;
 
 /**
- * This is the model class for table "accessToken".
+ * This is the model class for table "Article".
  *
  * @property int $id
+ * @property string $title
+ * @property string|null $body
  * @property int $userId
- * @property string $token
- *
+ * @property int $username
+ * 
  * @property User $user
  */
-class BaseAccessToken extends \yii\db\ActiveRecord
+class BaseArticle extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'accessToken';
+        return 'Article';
     }
 
     /**
@@ -29,11 +31,10 @@ class BaseAccessToken extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['userId', 'token'], 'required'],
+            [['title', 'userId'], 'required'],
+            [['body'], 'string'],
             [['userId'], 'integer'],
-            [['token'], 'string', 'max' => 255],
-            [['userId'], 'unique'],
-            [['token'], 'unique'],
+            [['title'], 'string', 'max' => 255],
             [['userId'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['userId' => 'id']],
         ];
     }
@@ -45,8 +46,10 @@ class BaseAccessToken extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'title' => 'Title',
+            'body' => 'Body',
             'userId' => 'User ID',
-            'token' => 'Token',
+            'username' => 'Username',
         ];
     }
 

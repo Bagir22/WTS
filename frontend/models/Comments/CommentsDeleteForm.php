@@ -2,11 +2,10 @@
 
 namespace frontend\models\Comments;
 
-use yii\base\Model;
+use common\models\Comments\Comments;
+use common\models\User\User;
 use yii;
-
-use common\models\Comments;
-use common\models\User;
+use yii\base\Model;
 
 class CommentsDeleteForm extends Model
 {
@@ -18,11 +17,11 @@ class CommentsDeleteForm extends Model
         return [
             [['accessToken', 'commentId'], 'required'],
 
-            ['accessToken', 'exist', 'targetClass' => '\common\models\AccessToken',
+            ['accessToken', 'exist', 'targetClass' => '\common\models\AccessToken\AccessToken',
                 'targetAttribute' => 'token',
                 'message' => "This access token doesn't exist."],
 
-            ['commentId', 'exist', 'targetClass' => '\common\models\Comments',
+            ['commentId', 'exist', 'targetClass' => '\common\models\Comments\Comments',
                 'targetAttribute' => 'id',
                 'message' => "This comment doesn't exist."],
         ];

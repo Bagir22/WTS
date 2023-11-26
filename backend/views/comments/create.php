@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 
 /** @var yii\web\View $this */
-/** @var common\models\Comments $model */
+/** @var \common\models\Comments\Comments $model */
 
 $this->title = 'Create Comments';
 $this->params['breadcrumbs'][] = ['label' => 'Comments', 'url' => ['index']];

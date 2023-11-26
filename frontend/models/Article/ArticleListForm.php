@@ -2,11 +2,10 @@
 
 namespace frontend\models\Article;
 
+use common\models\Article\Article;
+use common\models\User\User;
 use Yii;
 use yii\base\Model;
-
-use common\models\Article;
-use common\models\User;
 
 class ArticleListForm extends Model
 {
@@ -19,7 +18,7 @@ class ArticleListForm extends Model
     public function rules()
     {
         return [
-            ['accessToken', 'exist', 'targetClass' => '\common\models\AccessToken',
+            ['accessToken', 'exist', 'targetClass' => '\common\models\AccessToken\AccessToken',
                 'targetAttribute' => 'token',
                 'message' => "This access token doesn't exist."],
 

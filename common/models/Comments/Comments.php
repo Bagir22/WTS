@@ -1,6 +1,6 @@
 <?php
 
-namespace common\models;
+namespace common\models\Comments;
 
 /**
  * This is the model class for table "Comments".

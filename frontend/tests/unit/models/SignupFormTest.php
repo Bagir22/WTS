@@ -34,11 +34,11 @@ class SignupFormTest extends \Codeception\Test\Unit
         $user = $model->signup();
         verify($user)->notEmpty();
 
-        /** @var \common\models\User $user */
-        $user = $this->tester->grabRecord('common\models\User', [
+        /** @var \common\models\User\User $user */
+        $user = $this->tester->grabRecord('common\models\User\User', [
             'username' => 'some_username',
             'email' => 'some_email@example.com',
-            'status' => \common\models\User::STATUS_INACTIVE
+            'status' => \common\models\User\User::STATUS_INACTIVE
         ]);
 
         $this->tester->seeEmailIsSent();

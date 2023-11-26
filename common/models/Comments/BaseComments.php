@@ -1,8 +1,9 @@
 <?php
 
-namespace common\models;
+namespace common\models\Comments;
 
-use Yii;
+use common\models\Article\Article;
+use common\models\User\User;
 
 /**
  * This is the model class for table "BaseComments".

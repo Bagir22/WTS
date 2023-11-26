@@ -1,8 +1,9 @@
 <?php
 
-namespace common\models;
+namespace common\models\AccessToken;
 
-use Yii;
+use common\models\User\User;
+
 /**
  * This is the model class for table "accessToken".
  *

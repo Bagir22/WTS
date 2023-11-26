@@ -1,7 +1,10 @@
 <?php
 
-namespace common\models;
+namespace common\models\Article;
 
+
+use common\models\Comments\Comments;
+use common\models\User\User;
 
 /**
  * This is the model class for table "Article".

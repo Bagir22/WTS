@@ -2,12 +2,12 @@
 
 namespace backend\controllers;
 
-use Yii;
-use common\models\Article;
 use app\models\ArticleSearch;
+use common\models\Article\Article;
+use Yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * ArticleController implements the CRUD actions for Article model.
