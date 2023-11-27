@@ -43,32 +43,35 @@ $this->params['breadcrumbs'][] = $this->title;
     ]) ?>
 
 
-    <h4>Comments:</h4>
-
     <?php
-        $dataProvider = new ActiveDataProvider([
-            'query' => $model->getComments(),
-            'pagination' => [
-                'pageSize' => yii::$app->params['comment.limit'],
-            ],
-        ]);
-        echo GridView::widget([
-            'dataProvider' => $dataProvider,
-            'columns' => [
-                ['class' => 'yii\grid\SerialColumn'],
+        $comments = $model->getComments();
 
-                'id',
-                'userId',
-                'articleId',
-                'body:ntext',
-                [
-                    'class' => ActionColumn::className(),
-                    'urlCreator' => function ($action, Comments $model, $key, $index, $column) {
-                        return Url::toRoute([sprintf("../comments/%s", $action), 'id' => $model->id]);
-                    }
+        if ($comments->count() != 0) {
+            echo '<h5>Comments:</h5>';
+            $dataProvider = new ActiveDataProvider([
+                'query' => $comments,
+                'pagination' => [
+                    'pageSize' => yii::$app->params['comment.limit'],
                 ],
-            ]
-        ]);
+            ]);
+            echo GridView::widget([
+                'dataProvider' => $dataProvider,
+                'columns' => [
+                    ['class' => 'yii\grid\SerialColumn'],
+                    'id',
+                    'userId',
+                    'articleId',
+                    'body:ntext',
+                    [
+                        'class' => ActionColumn::className(),
+                        'urlCreator' => function ($action, Comments $model, $key, $index, $column) {
+                            return Url::toRoute([sprintf("../comments/%s", $action), 'id' => $model->id]);
+                        }
+                    ],
+                ]
+            ]);
+        }
+
     ?>
 
 </div>
