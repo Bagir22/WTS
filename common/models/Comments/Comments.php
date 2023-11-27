@@ -18,12 +18,16 @@ class Comments extends BaseComments
      *
      * @return string|array
      */
-    public function saveComment() {
-        if ($this->save()) {
+    public function saveComment()
+    {
+        if ($this->save())
+        {
             return [
                 'message' => "Success save comment"
             ];
-        } else {
+        }
+        else
+        {
             return [
                 "message" => "Can't save comment",
                 "error" => $this->getErrors(),
@@ -36,12 +40,16 @@ class Comments extends BaseComments
      *
      * @return string|array
      */
-    public function deleteComment() {
-        if ($this->delete()) {
+    public function deleteComment()
+    {
+        if ($this->delete())
+        {
             return [
                 'message' => "Success delete comment"
             ];
-        } else {
+        }
+        else
+        {
             return [
                 "message" => "Can't delete comment",
                 "error" => $this->getErrors(),
@@ -49,20 +57,21 @@ class Comments extends BaseComments
         }
     }
 
-    public function shortSerialize() {
-
+    public function shortSerialize()
+    {
         return [
             "userId" => $this["userId"],
             "body" => $this["body"],
         ];
     }
 
-    public function longSerialize($comment) {
+    public function longSerialize()
+    {
         return [
-            "commentId" => $comment["id"],
-            "userId" => $comment["userId"],
-            "articleId" => $comment["articleId"],
-            "body" => $comment["body"],
+            "commentId" => $this["id"],
+            "userId" => $this["userId"],
+            "articleId" => $this["articleId"],
+            "body" => $this["body"],
         ];
     }
 }

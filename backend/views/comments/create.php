@@ -13,8 +13,13 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
+    <!-- Автоматическое подставление id статьи, если переоход из создания коментария в статье -->
+    <?= $model->articleId = yii::$app->request->resolve()[1]['id'] ?? "" ?>
+
     <?= $this->render('_form', [
         'model' => $model,
-    ]) ?>
+    ])
+
+    ?>
 
 </div>

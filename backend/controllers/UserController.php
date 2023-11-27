@@ -5,6 +5,7 @@ namespace backend\controllers;
 use app\models\UserSearch;
 use common\models\User\User;
 use Yii;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -22,6 +23,18 @@ class UserController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => AccessControl::class,
+                    'rules' => [
+                        [
+                            'actions' => ['index', 'create', 'update', 'delete', 'view'],
+                            'allow' => true,
+                            'matchCallback' => function ($rule, $action) {
+                                return User::checkAdminLogin(Yii::$app->user->id);
+                            }
+                        ],
+                    ],
+                ],
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
@@ -39,8 +52,6 @@ class UserController extends Controller
      */
     public function actionIndex()
     {
-        $this->checkAdminLogin();
-
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
@@ -58,8 +69,6 @@ class UserController extends Controller
      */
     public function actionView($id)
     {
-        $this->checkAdminLogin();
-
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -72,8 +81,6 @@ class UserController extends Controller
      */
     public function actionCreate()
     {
-        $this->checkAdminLogin();
-
         $model = new User();
 
         if ($this->request->isPost) {
@@ -98,8 +105,6 @@ class UserController extends Controller
      */
     public function actionUpdate($id)
     {
-        $this->checkAdminLogin();
-
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -120,7 +125,7 @@ class UserController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->checkAdminLogin();
+        //$this->checkAdminLogin();
 
         $this->findModel($id)->delete();
 
@@ -141,11 +146,5 @@ class UserController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
-    }
-
-    private function checkAdminLogin() {
-        if (Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
     }
 }

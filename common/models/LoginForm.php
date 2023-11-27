@@ -29,8 +29,6 @@ class LoginForm extends Model
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
             ['password', 'validatePassword'],
-            // isAdmin is validated by validateAdmin()
-            ['isAdmin', 'validateAdmin'],
         ];
     }
 
@@ -47,22 +45,6 @@ class LoginForm extends Model
             $user = $this->getUser();
             if (!$user || !$user->validatePassword($this->password)) {
                 $this->addError($attribute, 'Incorrect email or password.');
-            }
-        }
-    }
-
-    /**
-     * Validates the admin.
-     *
-     * @param string $attribute the attribute currently being validated
-     * @param array $params the additional name-value pairs given in the rule
-     */
-    public function validateAdmin($attribute, $params)
-    {
-        if (!$this->hasErrors()) {
-            $user = $this->getUser();
-            if (!$user || !$user->isAdmin) {
-                $this->addError($attribute, 'User is not admin.');
             }
         }
     }

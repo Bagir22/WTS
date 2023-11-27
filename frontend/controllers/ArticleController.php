@@ -2,6 +2,8 @@
 
 namespace frontend\controllers;
 
+use common\models\Article\Article;
+use frontend\models\Comments\CommentsPublishForm;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\rest\Controller;
@@ -45,5 +47,5 @@ class ArticleController extends Controller
     public function actionMy() {
         $model = new ArticleListForm();
         return $model->getArticleList();
-    }  
+    }
 }

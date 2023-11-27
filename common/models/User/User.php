@@ -107,14 +107,18 @@ class User extends BaseUser
      * @param string $id
      * @return string|array
      */
-    private function saveUserAccessToken($id) {
+    private function saveUserAccessToken($id)
+    {
         $accessToken = new AccessToken(['userId'=> $id]);
         $accessToken->token = Yii::$app->security->generateRandomString();
-        if ($accessToken->save()) {
+        if ($accessToken->save())
+        {
             return [
                 "accessToken" => $accessToken->token
                 ];
-        } else {
+        }
+        else
+        {
             return [
                 "message" => "Can't save access token",
                 "error" => $this->getErrors(),
@@ -127,7 +131,8 @@ class User extends BaseUser
      *
      * @return string|array
      */
-    public function saveUser() {
+    public function saveUser()
+    {
         if ($this->save()) {
             return $this->saveUserAccessToken($this->id);
         } else {
@@ -144,7 +149,8 @@ class User extends BaseUser
      * @param string $token
      * @return User|null
      */
-    public static function getUserByAccessToken($token) {
+    public static function getUserByAccessToken($token)
+    {
         $userIdByToken = AccessToken::findOne(['token' => $token]);
         return User::findOne(['id' => $userIdByToken->userId]);
     }
@@ -155,8 +161,25 @@ class User extends BaseUser
      * @param string $id
      * @return string|null
      */
-    public function getAccessTokenByUserID($id) {
+    public function getAccessTokenByUserID($id)
+    {
         $accessToken = AccessToken::findOne(['userId' => $id]);
         return $accessToken->token;
+    }
+
+    /**
+     * Check isAdmin user
+     *
+     * @param string $id
+     * @return bool|null
+     */
+    public static function checkAdminLogin($id)
+    {
+        if (!User::findOne(['id' => $id, 'isAdmin' => 1]))
+        {
+            return false;
+        }
+
+        return true;
     }
 }

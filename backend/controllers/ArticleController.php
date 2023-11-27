@@ -4,8 +4,13 @@ namespace backend\controllers;
 
 use app\models\ArticleSearch;
 use common\models\Article\Article;
+use common\models\Comments\Comments;
+use common\models\User\User;
 use Yii;
+use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\Console;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -22,6 +27,18 @@ class ArticleController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => AccessControl::class,
+                    'rules' => [
+                        [
+                            'actions' => ['index', 'create', 'update', 'delete', 'view'],
+                            'allow' => true,
+                            'matchCallback' => function ($rule, $action) {
+                                return User::checkAdminLogin(Yii::$app->user->id);
+                            }
+                        ],
+                    ],
+                ],
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
@@ -39,8 +56,6 @@ class ArticleController extends Controller
      */
     public function actionIndex()
     {
-        $this->checkAdminLogin();
-
         $searchModel = new ArticleSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
@@ -58,10 +73,10 @@ class ArticleController extends Controller
      */
     public function actionView($id)
     {
-        $this->checkAdminLogin();
+        $model = $this->findModel($id);
 
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -72,8 +87,6 @@ class ArticleController extends Controller
      */
     public function actionCreate()
     {
-        $this->checkAdminLogin();
-
         $model = new Article();
 
         if ($this->request->isPost) {
@@ -98,8 +111,6 @@ class ArticleController extends Controller
      */
     public function actionUpdate($id)
     {
-        $this->checkAdminLogin();
-
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -120,8 +131,6 @@ class ArticleController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->checkAdminLogin();
-
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
@@ -141,11 +150,5 @@ class ArticleController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
-    }
-
-    private function checkAdminLogin() {
-        if (Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
     }
 }

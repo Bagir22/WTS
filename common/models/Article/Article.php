@@ -19,27 +19,32 @@ use common\models\User\User;
  */
 class Article extends BaseArticle
 {
-    public function saveArticle() {
-        if ($this->save()) {
+    public function saveArticle()
+    {
+        if ($this->save())
+        {
             return [
                 "message" => "Successful publish"
             ];
-        } else {
+        }
+        else
+        {
             return [
                 "message" => "Unsuccessful publish",
                 "error" => $this->getErrors()
             ];
         }
     }
-    public function shortSerialize() {
-
+    public function shortSerialize()
+    {
         return [
             "id" => $this["id"],
             "title" => $this["title"],
         ];
     }
 
-    public function longSerialize() {
+    public function longSerialize()
+    {
         return [
             "id" => $this["id"],
             "userId" => $this["userId"],
@@ -47,5 +52,11 @@ class Article extends BaseArticle
             "body" => $this["body"],
             "comments" => Comments::findAll(['articleId' => $this["id"]])
         ];
+    }
+
+    public function getComments()
+    {
+        return Comments::find()
+            ->where(['articleId' => $this['id']]);
     }
 }
