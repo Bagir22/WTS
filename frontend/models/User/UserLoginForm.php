@@ -17,7 +17,7 @@ class UserLoginForm extends Model
             [['email', 'password'], 'required'],
 
             [['email'], 'email'],
-            ['email', 'unique', 'targetClass' => '\common\models\User\User', 'message' => 'This email address has already been taken.'],
+            ['email', 'exist', 'targetClass' => '\common\models\User\User', 'message' => 'This email is not exist.'],
             ['email', 'string', 'min' => 2, 'max' => 255],
 
             ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
@@ -31,6 +31,10 @@ class UserLoginForm extends Model
 
     public function login()
     {
+        if (!$this->validate()) {
+            return $this->getErrors();
+        }
+
         $user = User::findByEmail($this->email);
         if ($user->validatePassword($this->password))
         {
