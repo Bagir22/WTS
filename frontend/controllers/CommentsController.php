@@ -50,12 +50,12 @@ class CommentsController extends Controller
     public function actionAll()
     {
         $model = new CommentsListForm();
-        return $model->getCommentsList();
+        return $model->getAllCommentsList();
     }
 
     public function actionMy()
     {
         $model = new CommentsListForm();
-        return $model->getCommentsList();
+        return $model->getMyCommentsList();
     }
 }

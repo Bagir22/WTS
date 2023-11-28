@@ -40,9 +40,25 @@ class CommentsListForm extends Model
         $this->attributes = Yii::$app->request->get();
     }
 
-    public function getCommentsList()
+    public function getAllCommentsList()
     {
-        if (!$this->validate()) {
+        if (!$this->validate())
+        {
+            return $this->getErrors();
+        }
+
+        $this->comments = Comments::find()
+            ->where(['articleId' => $this->articleId])
+            ->limit($this->limit)
+            ->offset($this->offset)->all();
+
+        return $this->serialize();
+    }
+
+    public function getMyCommentsList()
+    {
+        if (!$this->validate())
+        {
             return $this->getErrors();
         }
 
@@ -58,15 +74,12 @@ class CommentsListForm extends Model
         }
         else
         {
-            $this->comments = Comments::find()
-                ->where(['articleId' => $this->articleId])
-                ->limit($this->limit)
-                ->offset($this->offset)->all();
-
-            return $this->serialize();
+            return [
+                "message" => "Unsuccessful get my comment for article",
+                "error" => "No access token"
+            ];
         }
     }
-
     public function serialize()
     {
         $result = [];

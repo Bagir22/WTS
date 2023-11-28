@@ -31,7 +31,8 @@ class UserLoginForm extends Model
 
     public function login()
     {
-        if (!$this->validate()) {
+        if (!$this->validate())
+        {
             return $this->getErrors();
         }
 
@@ -39,7 +40,9 @@ class UserLoginForm extends Model
         if ($user->validatePassword($this->password))
         {
             return ["accessToken" => $user->getAccessTokenByUserID($user->id)];
-        } else {
+        }
+        else
+        {
             return [
                 "message" => "Can't validate user"
             ];

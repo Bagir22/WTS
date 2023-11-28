@@ -41,11 +41,11 @@ class ArticleController extends Controller
 
     public function actionAll() {
         $model = new ArticleListForm();
-        return $model->getArticleList();
+        return $model->getAllArticleList();
     }   
 
     public function actionMy() {
         $model = new ArticleListForm();
-        return $model->getArticleList();
+        return $model->getMyArticleList();
     }
 }

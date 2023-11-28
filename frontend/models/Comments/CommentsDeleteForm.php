@@ -32,20 +32,25 @@ class CommentsDeleteForm extends Model
     }
 
     public function deleteComment() {
-        if (!$this->validate()) {
+        if (!$this->validate())
+        {
             return $this->getErrors();
         }
 
         $user = User::getUserByAccessToken($this->accessToken);
 
-        if (!$user) {
+        if (!$user)
+        {
             return [
                 "message" => "Unsuccessful delete comment",
                 "error" => "No find user by access token"
             ];
-        } else {
+        }
+        else
+        {
             $comment = Comments::findOne(['id' => $this->commentId]);
-            if ($comment) {
+            if ($comment)
+            {
                 return $comment->deleteComment();
             }
         }

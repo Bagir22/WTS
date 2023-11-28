@@ -33,7 +33,22 @@ class ArticleListForm extends Model
         $this->attributes = Yii::$app->request->get();
     }
 
-    public function getArticleList()
+    public function getAllArticleList()
+    {
+        if (!$this->validate())
+        {
+            return $this->getErrors();
+        }
+
+        $this->articles = Article::find()
+            ->limit($this->limit)
+            ->offset($this->offset)
+            ->asArray()->all();
+
+        return $this->serialize();
+    }
+
+    public function getMyArticleList()
     {
         if (!$this->validate())
         {
@@ -53,12 +68,10 @@ class ArticleListForm extends Model
         }
         else
         {
-            $this->articles = Article::find()
-                ->limit($this->limit)
-                ->offset($this->offset)
-                ->asArray()->all();
-
-            return $this->serialize();
+            return [
+                "message" => "Unsuccessful get my articles",
+                "error" => "No access token"
+            ];
         }
     }
 
