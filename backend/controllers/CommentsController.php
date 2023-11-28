@@ -94,11 +94,15 @@ class CommentsController extends Controller
     {
         $model = new Comments();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
+        if ($this->request->isPost)
+        {
+            if ($model->load($this->request->post()) && $model->save())
+            {
                 return $this->redirect(['view', 'id' => $model->id]);
             }
-        } else {
+        }
+        else
+        {
             $model->loadDefaultValues();
         }
 
@@ -118,7 +122,8 @@ class CommentsController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->save())
+        {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -150,7 +155,8 @@ class CommentsController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Comments::findOne(['id' => $id])) !== null) {
+        if (($model = Comments::findOne(['id' => $id])) !== null)
+        {
             return $model;
         }
 

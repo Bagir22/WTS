@@ -46,7 +46,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php
         $comments = $model->getComments();
 
-        if ($comments->count() != 0) {
+        if ($comments->count() != 0)
+        {
             echo '<h5>Comments:</h5>';
             $dataProvider = new ActiveDataProvider([
                 'query' => $comments,

@@ -4,13 +4,10 @@ namespace backend\controllers;
 
 use app\models\ArticleSearch;
 use common\models\Article\Article;
-use common\models\Comments\Comments;
 use common\models\User\User;
 use Yii;
-use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-use yii\helpers\Console;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 

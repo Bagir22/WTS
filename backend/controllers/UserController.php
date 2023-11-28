@@ -83,11 +83,15 @@ class UserController extends Controller
     {
         $model = new User();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
+        if ($this->request->isPost)
+        {
+            if ($model->load($this->request->post()) && $model->save())
+            {
                 return $this->redirect(['view', 'id' => $model->id]);
             }
-        } else {
+        }
+        else
+        {
             $model->loadDefaultValues();
         }
 
@@ -107,7 +111,8 @@ class UserController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->save())
+        {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -125,8 +130,6 @@ class UserController extends Controller
      */
     public function actionDelete($id)
     {
-        //$this->checkAdminLogin();
-
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
@@ -141,7 +144,8 @@ class UserController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = User::findOne(['id' => $id])) !== null) {
+        if (($model = User::findOne(['id' => $id])) !== null)
+        {
             return $model;
         }
 

@@ -33,6 +33,13 @@ class SiteController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                     ],
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'matchCallback' => function ($rule, $action) {
+                            return User::checkAdminLogin(Yii::$app->user->id);
+                        }
+                    ],
                 ],
             ],
             'verbs' => [
