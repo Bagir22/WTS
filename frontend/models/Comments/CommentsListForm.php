@@ -35,11 +35,6 @@ class CommentsListForm extends Model
         ];
     }
 
-    public function init()
-    {
-        $this->attributes = Yii::$app->request->get();
-    }
-
     public function getAllCommentsList()
     {
         if (!$this->validate())

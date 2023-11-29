@@ -37,12 +37,14 @@ class CommentsController extends Controller
     public function actionPublish()
     {
         $model = new CommentsPublishForm();
+        $model->load(Yii::$app->request->post(), "");
         return $model->makePublish();
     }
 
     public function actionDelete()
     {
         $model = new CommentsDeleteForm();
+        $model->load(Yii::$app->request->post(), "");
         return $model->deleteComment();
 
     }
@@ -50,12 +52,14 @@ class CommentsController extends Controller
     public function actionAll()
     {
         $model = new CommentsListForm();
+        $model->load(Yii::$app->request->get(), "");
         return $model->getAllCommentsList();
     }
 
     public function actionMy()
     {
         $model = new CommentsListForm();
+        $model->load(Yii::$app->request->get(), "");
         return $model->getMyCommentsList();
     }
 }

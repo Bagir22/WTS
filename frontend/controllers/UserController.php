@@ -35,12 +35,14 @@ class UserController extends Controller
     public function actionSignup()
     {
         $model = new UserSignupForm();
+        $model->load(Yii::$app->request->post(), "");
         return $model->signup();
     }
 
     public function actionLogin()
     {
         $model = new UserLoginForm();
+        $model->load(Yii::$app->request->post(), "");
         return $model->login();
     }   
 }

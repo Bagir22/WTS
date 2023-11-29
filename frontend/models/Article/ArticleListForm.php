@@ -18,19 +18,13 @@ class ArticleListForm extends Model
     public function rules()
     {
         return [
-            ['accessToken', 'exist', 'targetClass' => '\common\models\AccessToken\AccessToken',
-                'targetAttribute' => 'token',
-                'message' => "This access token doesn't exist."],
+                ['accessToken', 'exist', 'targetClass' => '\common\models\AccessToken\AccessToken',
+                    'targetAttribute' => 'token',
+                    'message' => "This access token doesn't exist."],
+                ['limit', 'default', 'value' => Yii::$app->params['article.limit']],
 
-            ['limit', 'default', 'value' => Yii::$app->params['article.limit']],
-
-            ['offset', 'default', 'value' => Yii::$app->params['article.offset']],
+                ['offset', 'default', 'value' => Yii::$app->params['article.offset']],
         ];
-    }
-
-    public function init()
-    {
-        $this->attributes = Yii::$app->request->get();
     }
 
     public function getAllArticleList()
@@ -50,8 +44,7 @@ class ArticleListForm extends Model
 
     public function getMyArticleList()
     {
-        if (!$this->validate())
-        {
+        if (!$this->validate()) {
             return $this->getErrors();
         }
 
@@ -62,7 +55,7 @@ class ArticleListForm extends Model
             $this->articles = $user->getArticles()
                 ->limit($this->limit)
                 ->offset($this->offset)
-                ->asArray()->all();
+                ->all();
 
             return $this->serialize();
         }

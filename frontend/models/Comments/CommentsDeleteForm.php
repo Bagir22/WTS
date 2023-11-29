@@ -27,10 +27,6 @@ class CommentsDeleteForm extends Model
         ];
     }
 
-    public function init() {
-        $this->attributes = Yii::$app->request->post();
-    }
-
     public function deleteComment() {
         if (!$this->validate())
         {

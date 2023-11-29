@@ -28,11 +28,6 @@ class UserSignupForm extends Model
         ];
     }
 
-    public function init()
-    {
-        $this->attributes = Yii::$app->request->post();
-    }
-
     public function signup()
     {
         if (!$this->validate())
@@ -41,8 +36,7 @@ class UserSignupForm extends Model
         }
 
         $user = new User();
-        $user->username = $this->username;
-        $user->email = $this->email;
+        $user->load($this->toArray(), "");
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();

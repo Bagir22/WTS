@@ -28,11 +28,6 @@ class CommentsPublishForm extends Model
         ];
     }
 
-    public function init()
-    {
-        $this->attributes = Yii::$app->request->post();
-    }
-
     public function makePublish()
     {
         if (!$this->validate())

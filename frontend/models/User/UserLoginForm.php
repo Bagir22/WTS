@@ -24,11 +24,6 @@ class UserLoginForm extends Model
         ];
     }
 
-    public function init()
-    {
-        $this->attributes = Yii::$app->request->post();
-    }
-
     public function login()
     {
         if (!$this->validate())
